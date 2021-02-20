@@ -60,10 +60,18 @@ class Nonogram:
       for j in range(self.len_x):
         pygame.draw.rect(self.screen, (255*(1 - self.fields[i][j]), 255*(1 - self.fields[i][j]), 255*(1 - self.fields[i][j])), pygame.Rect(20*(j + self.x_additional) + 1, 20*(i + self.y_additional) + 1, 19, 19))
 
+  def marking(self, pos):
+    if pos[0] > 20*self.x_additional and pos[1] > 20*self.y_additional:
+      self.fields[(pos[1] - 20*self.y_additional)//20][(pos[0] - 20*self.x_additional)//20] += 1
+      self.fields[(pos[1] - 20*self.y_additional)//20][(pos[0] - 20*self.x_additional)//20] %= 2
+
   def running(self):
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
         sys.exit()
+
+      if event.type == pygame.MOUSEBUTTONUP:
+        self.marking(pygame.mouse.get_pos())
 
     game.draw()
 
