@@ -58,12 +58,16 @@ class Nonogram:
   def marked(self):
     for i in range(self.len_y):
       for j in range(self.len_x):
-        pygame.draw.rect(self.screen, (255*(1 - self.fields[i][j]), 255*(1 - self.fields[i][j]), 255*(1 - self.fields[i][j])), pygame.Rect(20*(j + self.x_additional) + 1, 20*(i + self.y_additional) + 1, 19, 19))
+        if self.fields[i][j] == 2:
+          pygame.draw.circle(self.screen, (255, 0, 0), (20*(j + self.x_additional) + 10, 20*(i + self.y_additional) + 10), 5)
 
-  def marking(self, pos):
+        else:
+          pygame.draw.rect(self.screen, (255*(1 - self.fields[i][j]), 255*(1 - self.fields[i][j]), 255*(1 - self.fields[i][j])), pygame.Rect(20*(j + self.x_additional) + 1, 20*(i + self.y_additional) + 1, 19, 19))
+
+  def marking(self, pos, type):
     if pos[0] > 20*self.x_additional and pos[1] > 20*self.y_additional:
-      self.fields[(pos[1] - 20*self.y_additional)//20][(pos[0] - 20*self.x_additional)//20] += 1
-      self.fields[(pos[1] - 20*self.y_additional)//20][(pos[0] - 20*self.x_additional)//20] %= 2
+      self.fields[(pos[1] - 20*self.y_additional)//20][(pos[0] - 20*self.x_additional)//20] += type
+      self.fields[(pos[1] - 20*self.y_additional)//20][(pos[0] - 20*self.x_additional)//20] %= 3
 
   def running(self):
     for event in pygame.event.get():
@@ -71,7 +75,7 @@ class Nonogram:
         sys.exit()
 
       if event.type == pygame.MOUSEBUTTONUP:
-        self.marking(pygame.mouse.get_pos())
+        self.marking(pygame.mouse.get_pos(), 2 - event.button)
 
     game.draw()
 
