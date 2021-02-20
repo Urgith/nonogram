@@ -26,11 +26,15 @@ class Nonogram:
     self.font = pygame.font.SysFont(None, 20)
     self.screen = pygame.display.set_mode((20*(self.len_x + self.x_additional), 20*(self.len_y + self.y_additional)))
 
+    self.fields = [[0 for i in range(self.len_x)] for j in range(self.len_y)]
+    print(self.fields)
+
   def draw(self):
     self.screen.fill((255, 255, 255))
 
     self.create_grid()
     self.insert_numbers()
+    self.marked()
     pygame.display.update()
 
   def create_grid(self):
@@ -51,6 +55,11 @@ class Nonogram:
       for j in range(len(self.y[i])):
         self.screen.blit(self.font.render(str(self.y[i][j]), True, (0, 0, 0)), (20*j + 7, 20*(self.y_additional + i) + 4))
 
+  def marked(self):
+    for i in range(self.len_y):
+      for j in range(self.len_x):
+        pygame.draw.rect(self.screen, (255*(1 - self.fields[i][j]), 255*(1 - self.fields[i][j]), 255*(1 - self.fields[i][j])), pygame.Rect(20*(j + self.x_additional) + 1, 20*(i + self.y_additional) + 1, 19, 19))
+
   def running(self):
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
@@ -59,6 +68,6 @@ class Nonogram:
     game.draw()
 
 
-game = Nonogram([list(range(3)) for i in range(5)], [list(range(4)) for i in range(5)])
+game = Nonogram([list(range(3)) for i in range(5)], [list(range(4)) for i in range(4)])
 while True:
   game.running()
