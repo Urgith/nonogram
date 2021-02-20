@@ -11,6 +11,15 @@ def additional(a_list):
   return maximum
 
 
+def cumsum(a_list):
+  summ = 0
+
+  for element in a_list:
+    summ += sum(element)
+
+  return summ
+
+
 class Nonogram:
   def __init__(self, x, y):
     pygame.display.set_caption('Nonogram')
@@ -18,6 +27,7 @@ class Nonogram:
     self.x = x
     self.y = y
 
+    self.summ = cumsum(x)
     self.len_x = len(x)
     self.len_y = len(y)
     self.x_additional = additional(y)
@@ -27,7 +37,6 @@ class Nonogram:
     self.screen = pygame.display.set_mode((20*(self.len_x + self.x_additional), 20*(self.len_y + self.y_additional)))
 
     self.fields = [[0 for i in range(self.len_x)] for j in range(self.len_y)]
-    print(self.fields)
 
   def draw(self):
     self.screen.fill((255, 255, 255))
@@ -69,6 +78,20 @@ class Nonogram:
       self.fields[(pos[1] - 20*self.y_additional)//20][(pos[0] - 20*self.x_additional)//20] += type
       self.fields[(pos[1] - 20*self.y_additional)//20][(pos[0] - 20*self.x_additional)//20] %= 3
 
+  def marked_sum(self):
+    summ = 0
+
+    for i in range(self.len_y):
+      for j in range(self.len_x):
+        if self.fields[i][j] == 1:
+          summ += 1
+
+    return summ
+
+  def verification(self):
+    if self.marked_sum() == self.summ:
+      print('SPRAWDZAMY')
+
   def running(self):
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
@@ -76,10 +99,11 @@ class Nonogram:
 
       if event.type == pygame.MOUSEBUTTONUP:
         self.marking(pygame.mouse.get_pos(), 2 - event.button)
+        self.verification()
 
     game.draw()
 
 
-game = Nonogram([list(range(3)) for i in range(5)], [list(range(4)) for i in range(4)])
+game = Nonogram([[1], [2], [1, 1], [1]], [[1, 1], [1], [1], [1, 1]])
 while True:
   game.running()
